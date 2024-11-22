@@ -21,7 +21,10 @@ function App() {
   };
   
   const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !==  id));
+    const confirmed = window.confirm("Are you sure you want to delete this task?");
+    if (confirmed){
+      setTasks(tasks.filter((task) => task.id !== id));
+    }
   };
 
   const editTask = (id) => {
@@ -53,26 +56,41 @@ function App() {
         <button onClick={addTask}>Add Task</button>
       </div>
       <div className="task-list">
-        {tasks.map((task) => (
-          <div key={task.id}  className="task-item">
-            {editing === task.id ? (
-              <>
-                <input
-                  type="text"
-                  value={editingText}
-                  onChange={(e) => setEditingText(e.target.value)}
-                />
-                <button onClick={() => saveEdit(task.id)}>Save</button>
-              </>
-              ) : (
-                <>
-                  <span>{task.text}</span>
-                  <button onClick={() => editTask(task.id)}>Edit</button>
-                </>
-            )}
-            <button onClick={() => deleteTask(task.id)}>Delete</button>
-        </div>
-        ))}
+        <table className="task-table">
+          <thead>
+           <tr>
+              <th>#</th>
+              <th>Task</th>
+              <th>Actions</th>
+           </tr>
+          </thead>
+          <tbody>
+            {tasks.map((task, index) => (
+              <tr key={task.id}>
+               <td>{index + 1}</td>
+               <td>
+                 {editing === task.id ? (
+                   <input
+                     type="text"
+                     value={editingText}
+                     onChange={(e) => setEditingText(e.target.value)}
+                   />
+                 ) : (
+                   task.text
+                  )}
+                </td>
+                <td>
+                  {editing === task.id ? (
+                    <button onClick={() => saveEdit(task.id)}>Save</button>
+                  ) : (
+                    <button onClick={() => editTask(task.id)}>Edit</button>
+                   )}
+                   <button onClick={() => deleteTask(task.id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+         </tbody>
+       </table>
       </div>
     </div>
   );
